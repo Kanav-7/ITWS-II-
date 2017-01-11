@@ -1,0 +1,99 @@
+#+TITLE: Org-mode Lab
+#+AUTHOR: Kanav Gupta
+#+EMAIL: kanav.gupta@students.iiit.ac.in
+
+* Files and Keys
+- == C-x,C-f,<hello.txt> ==
+- == C-h r ==
+- == C-<space><up-arrow>,M-w ==
+- == C-g , q ==
+- == C-y,C-y,C-y,C-y,C-y == 
+
+* Navigation and Commands
+-  == C-p,C-p,C-p,C-p,C-p,C-f,C-f,C-f,C-f,C-n,C-n,C-n ==
+-  == M-v,M-f,M-f,M-f,C-b,C-b,C-b,C-b,C-b ==
+		
+* Help
+- == C-h k , C-x C-c ==
+  runs the save-buffers-kill-terminal command. C-x C-c runs the command save-buffers-kill-terminal, which is an
+  interactive compiled Lisp function in `files.el'.
+  It is bound to C-x C-c, <menu-bar> <file> <exit-emacs>.
+
+- == C-h f , dired ==
+  dired is an interactive autoloaded Lisp function in 'dired.el'.
+  It is bound to C-x d , <menu-bar><file><dired>.
+
+
+* Bonus 
+- == M-x doctor==
+
+- Conversation
+ I am the psychotherapist.  Please, describe your problems.  Each time
+you are finished talking, type RET twice.
+
+What do you think?
+
+hello
+
+How do you do?  What brings you to see me?
+
+I have fever
+
+Maybe you should consult a medical doctor; I am a psychotherapist. 
+
+I don't understand.
+
+You can't do anything then?
+
+Perhaps your life has something to do with this.
+
+what is your good name
+
+What makes you believe what is my good name?
+
+what is your name
+
+Is it because of your plans that you say what is my name?
+
+Good Bye! You Don't know anything
+
+Possibly the people you hang around with have something to do with
+this.
+
+* Org 1
+* Markup and Plane List
+- *bold*
+- /italic/
+- =code=
+- ~verbatim~
+
+* Source Blocks
+#+BEGIN_SRC 
+#lang racket
+(provide ring-area)
+;;; purpose : Find area of a ring with given inner and outer radius.
+;;; usage: (ring-area 2 1) => 9.426
+;;; contract : number? number?  -> number?
+
+(define ring-area
+     (lambda (outer-radius inner-radius)
+	  (* 3.142 (- (* outer-radius outer-radius) (* inner-radius inner-radius)))))
+
+#+END_SRC
+
+#+BEGIN_SRC 
+#lang racket
+(provide even-out)
+;;; purpose : Print first 20 even integers
+;;; contract: . -> list?
+
+(define 20even
+	 (list '(0 2 4 6 8 10 12 14 16 18 20 22 24 26 28 30 32 34 36 38)))
+
+#+END_SRC
+
+* Links
+- [[Markup and Plane List][Markups and Plane List]]	
+- [[http://pascal.iiit.ac.in/~itws2/docs/labs/emacs-orgmode/index.html#sec-3-2-4][Lab Page]]
+- [[./hello.txt][hello.txt]]
+
