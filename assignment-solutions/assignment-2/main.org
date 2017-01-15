@@ -1,0 +1,613 @@
+#+TITLE: Assignment 2
+#+AUTHOR: Kanav Gupta
+#+EMAIL: kanav.gupta@students.iiit.ac.in
+#+SETUPFILE: ../../org-templates/level-2.org
+#+EXCLUDE_TAGS: boilerplate
+#+PROPERTY: session *scheme*
+#+PROPERTY: results output
+#+PROPERTY: exports code
+#+TAGS: boilerplate(b) notes(n) solution(s)
+
+* Introduction
+
+Code in src blocks is tangled out to a Racket file
+=main.rkt=.  This Racket file is an executable module.
+
+Each section of your narrative tangles out code from a src
+block into the =main.rkt= file.  Each src block has a
+=#+name:= directive naming the src block (see below).
+
+
+* Preamble
+
+The first thing is to add the =#lang racket= line at the top
+of your 
+This needs to be done once at the beginning for each file.
+=:session none= means that the line =#lang racket= is not to
+be input into the running scheme session =*scheme*=.
+
+
+** Module language
+#+name: lang_racket
+#+BEGIN_SRC scheme :session none 
+#lang racket
+#+END_SRC
+
+** Imports
+This section lists all the modules that your module needs to
+import.  You may need to add more =require= declarations
+depending on your homework. 
+
+#+NAME: imports
+#+BEGIN_SRC scheme  
+(require racket/list)
+(require rackunit)
+(require racket/contract)
+#+END_SRC
+
+
+* Problem 1
+ Write a function reduce that takes a binary function f, 
+ an initial value init and a list ls and reduces the list to an answer.
+* Solution to Problem 1
+The solution is structured as follows: 
+** purpose
+ =reduce= takes a binary function f, an initial value init and a list ls and reduces the list to an answer.
+
+** Example usage
+#+name: prob1_usage
+#+BEGIN_SRC scheme
+(reduce + 0 '(1 2 3 4 5)) => 15 
+#+END_SRC
+
+** Signature and Definition
+=reduce=  takes a binary function f, an initial value init and a list ls and reduces the list to an answer which is acheived by appling the 
+given function on all elements of list and decreasing the list one by one and returning the final value.
+#+name: reduce
+#+BEGIN_SRC scheme
+;;; reduce : [procedure?, value?, (listof value?)] -> value?
+(define reduce
+  (lambda (f init ls)
+    (if (empty? ls) init (reduce f (f (first ls) init) (rest ls)))))
+#+END_SRC
+
+** Test cases
+
+#+NAME: reduce_tests
+#+BEGIN_SRC scheme
+(define binary-and 
+  (lambda (x y)
+    (and x y)))
+
+(define (all-satisfy predicate ls) 
+  (reduce binary-and #t (map predicate ls)))
+
+(check-equal?  (all-satisfy even? '(2 3 4)) #f "All-even-test #f")
+(check-equal?  (all-satisfy even? '(2 4 6)) #t "All-even-test #t")
+(check-equal?  (all-satisfy boolean? '(#t #f 6)) #f "All-boolean-test #f")
+(check-equal?  (all-satisfy boolean? '(#t #f #t)) #t "All-boolean-test #t")
+#+END_SRC
+
+** Export
+This declaration exports the definition =reduce=. 
+#+NAME: prob_1_exports
+#+BEGIN_SRC scheme
+(provide reduce)
+#+END_SRC
+
+
+* Problem 2
+ Reverse a list using reduce defined above. 
+* Solution to Problem 2
+The solution is structured as follows: 
+** purpose
+ =reverse= take list and reverses the given list.
+** Example usage
+#+name: prob2_usage
+#+BEGIN_SRC scheme
+(reverse '(1 2 3)) => '(3 2 1) 
+#+END_SRC
+
+** Signature and Definition
+=reverse=  This reverses a given list using the reduce function defined in problem 1.
+#+name: reverse
+#+BEGIN_SRC scheme
+;;; reverse : (listof value?) -> (listof value?)
+(define reverse
+  (lambda (ls)
+    (reduce cons '() ls)))
+#+END_SRC
+
+** Test cases
+
+#+NAME: reverse_tests
+#+BEGIN_SRC scheme
+(check-equal? (reverse '(a b c)) '(c b a) "Reverse (a b c)")
+(check-equal? (reverse '(1 2 3 4)) '(4 3 2 1) "Reverse (1 2 3 4)")
+#+END_SRC
+
+** Export
+This declaration exports the definition =reverse=. 
+#+NAME: prob_2_exports
+#+BEGIN_SRC scheme
+(provide reverse)
+#+END_SRC
+
+
+* Problem 3
+find the length of a given list using the reduce defined above. 
+* Solution to Problem 3
+The solution is structured as follows: 
+** purpose
+ To find length of a given list
+** Example usage
+#+name: prob3_usage
+#+BEGIN_SRC scheme
+(list-length '(1 2 3)) => 3 
+#+END_SRC
+
+** Signature and Definition
+=list-length=  This program gives us the length of given list.
+#+name: list-length
+#+BEGIN_SRC scheme
+;;; list-length : (listof value?) -> nat?
+(define list-length
+  (lambda (ls)
+     (reduce (lambda (p q) (+ q 1)) 0 ls)))
+#+END_SRC
+
+** Test cases
+
+#+NAME: list-length_tests
+#+BEGIN_SRC scheme
+(check-equal? (list-length '(a b c)) 3 "List Length (a b c)")
+(check-equal? (list-length '(1 2 3 4)) 4 "List Length (1 2 3 4)")
+#+END_SRC
+
+** Export
+This declaration exports the definition =list-length=. 
+#+NAME: prob_3_exports
+#+BEGIN_SRC scheme
+(provide list-length)
+#+END_SRC
+
+
+
+
+
+
+* Problem 4
+compose takes two functions as arguments and returns their composition.
+Implement compose again here. 
+* Solution to Problem 4
+The solution is structured as follows: 
+** purpose
+=compose= takes in two functions and returns the composition of those two functions.
+** Example usage
+#+name: prob4_usage
+#+BEGIN_SRC scheme
+((compose sub1 sub1) 5) => 3
+#+END_SRC
+
+** Signature and Definition
+=compose=  This program take a pair of functions and gives back the composition of the functions.
+#+name: compose
+#+BEGIN_SRC scheme
+;;; compose: [procedure?, procedure?] -> procedure?
+(define compose
+  (lambda (a b)
+    (lambda (x) (a (b x)))))
+#+END_SRC
+
+** Test cases
+
+#+NAME: compose_tests
+#+BEGIN_SRC scheme
+(define next-even? (compose even? add1))
+(check-equal? (next-even? 4) #f "compose-t1")
+(check-equal? (next-even? 5) #t "compose-t2")
+
+#+END_SRC
+
+** Export
+This declaration exports the definition =compose=. 
+#+NAME: prob_4_exports
+#+BEGIN_SRC scheme
+(provide compose)
+#+END_SRC
+
+
+
+
+
+
+* Problem 5
+Use compose and reduce above to create compose*, 
+which takes in a list of functions as argument (see example) and 
+returns the composition of all functions. 
+* Solution to Problem 5
+The solution is structured as follows: 
+** purpose
+=compose*= takes in a list of functions and returns the composition of all the functions in the list as another function.
+** Example usage
+#+name: prob5_usage
+#+BEGIN_SRC scheme
+((compose* sub1 sub1 sub1) 5) => 2
+#+END_SRC
+
+** Signature and Definition
+=compose*= This program returns a function which is a composition of all the functions in a list.
+#+name: compose*
+#+BEGIN_SRC scheme
+; compose* : (listof procedure?) -> procedure?
+(define compose*
+  (lambda fns
+    (reduce compose (first (reverse fns)) (rest (reverse fns)))))
+#+END_SRC
+
+** Test cases
+
+#+NAME: compose*_tests
+#+BEGIN_SRC scheme
+(define mul2
+ (lambda (x) (* x 2)))
+
+(define f (compose* add1 mul2 sub1))
+(check-equal? (f 4) 7 "f 4")
+(check-equal? (f 7) 13 "f 7")
+#+END_SRC
+
+** Export
+This declaration exports the definition =compose*=. 
+#+NAME: prob_5_exports
+#+BEGIN_SRC scheme
+(provide compose*)
+#+END_SRC
+
+
+
+
+
+
+
+* Problem 6
+Generate the function list-map using reduce. list-map takes a function and a list as arguments
+and applies the function to every element of the list. 
+* Solution to Problem 6
+The solution is structured as follows: 
+** purpose
+=list-map= takes in a list and a function and returns the list in which the function is applied on every element of given list.
+** Example usage
+#+name: prob6_usage
+#+BEGIN_SRC scheme
+(list-map add1 '(1 2 3)) => '(2 3 4)
+#+END_SRC
+
+** Signature and Definition
+=list-map= Takes a function and a list and apply the function on all the elements of list and returns the list.
+#+name: list-map
+#+BEGIN_SRC scheme
+; list-map : [procedure?, (listof value?)] -> (listof value?)
+(define list-map
+  (lambda (f ls)
+    (reduce (lambda (p q) (cons (f p) q)) '() (reverse ls))))
+#+END_SRC
+
+** Test cases
+
+#+NAME: list-map_tests
+#+BEGIN_SRC scheme
+(check-equal? (list-map add1 '(1 2 3 4)) '(2 3 4 5) "test 1")
+(check-equal? (list-map boolean? '(1 #t #f 4)) '(#f #t #t #f) "test 2")
+#+END_SRC
+
+** Export
+This declaration exports the definition =list-map=. 
+#+NAME: prob_6_exports
+#+BEGIN_SRC scheme
+(provide list-map)
+#+END_SRC
+
+
+
+
+
+
+
+
+* Problem 7
+ Define the data types (constructors) triangle (for equilateral triangles) , square and circle. triangle and square take in a side. circle takes in radius.
+
+Also define type predicates triangle?, square? and circle?.
+
+Now define shape? which checks if the given value is a circle, square or triangle.
+
+Now define functions area and perimeter which compute the area and perimeter of the respective shapes.
+
+You should create one function each for area and perimeter which works for all datatypes. 
+
+* Solution to Problem 7
+The solution is structured as follows: 
+** purpose
+purpose of =shape= is to define data types and predicates of triangle,square,circle and also to find area and perimeter of the given shapes.  
+** Example usage
+#+name: prob7_usage
+#+BEGIN_SRC scheme
+(area (square 4)) => 16
+#+END_SRC
+
+** Signature and Definition
+=shape= defines data types and predicates of triangle, square, circle and find area and perimeter of given shape.
+#+name: shape
+#+BEGIN_SRC scheme
+; area : shape? -> real?
+; perimeter: shape? -> real?
+(define triangle
+  (lambda (side) (list 'triangle side)))
+
+(define square
+  (lambda (side) (list 'square side)))
+
+(define circle
+  (lambda (radius) (list 'circle radius)))
+
+(define triangle?
+  (lambda (ls)
+    (and (list? ls)
+         (= 2 (length ls))
+         (eq? (first ls)
+              'triangle)
+         (real? (second ls)))))
+
+(define square?
+  (lambda (ls)
+    (and (list? ls)
+         (= 2 (length ls))
+         (eq? (first ls)
+              'square)
+         (real? (second ls)))))
+
+(define circle?
+  (lambda (ls)
+    (and (list? ls)
+         (= 2 (length ls))
+         (eq? (first ls)
+              'circle)
+         (real? (second ls)))))
+
+(define shape?
+  (lambda (ls)
+    (or (triangle? ls)
+        (square? ls)
+        (circle? ls))))
+
+(define area
+  (lambda (ls)
+    (if (triangle? ls) (* (/ (sqrt 3) 4) (second ls) (second ls)) 
+     (if (square? ls) (* (second ls) (second ls))
+     (if (circle? ls) (* pi (second ls) (second ls)) #f)))))
+
+(define perimeter
+  (lambda (ls)
+    (if (triangle? ls) (* 3 (second ls))
+     (if (square? ls) (* 4 (second ls))
+     (if (circle? ls) (* pi 2 (second ls)) #f)))))
+#+END_SRC
+
+** Test cases
+
+#+NAME: shape_tests
+#+BEGIN_SRC scheme
+(define equilateral-triangle-area
+  (lambda (side)
+    (* (/ (sqrt 3) 4) side side)))
+
+(define square-area
+  (lambda (side)
+    (* side side)))
+
+(define circle-area
+  (lambda (radius)
+    (* pi radius radius)))
+
+
+(define square-perimeter
+    (lambda (side)
+        (* 4 side)))
+
+(define equilateral-triangle-perimeter
+    (lambda (side)
+        (* 3 side)))
+
+(define circle-perimeter
+    (lambda (radius)
+        (* 2 pi radius)))
+
+
+(check-equal? (area (triangle 3)) (equilateral-triangle-area 3) "Triangle
+area test")
+
+(check-equal? (area (square 4)) (square-area 4) "Square area test")
+(check-equal? (area (circle 4)) (circle-area 4) "Circle atrea test")
+
+(check-equal? (perimeter (triangle 3)) (equilateral-triangle-perimeter 3) "Triangle
+perimeter test")
+
+(check-equal? (perimeter (square 4)) (square-perimeter 4) "Square perimeter test")
+(check-equal? (perimeter (circle 4)) (circle-perimeter 4) "Circle perimeter test")
+#+END_SRC
+
+** Export
+This declaration exports the definition =shape=. 
+#+NAME: prob_7_exports
+#+BEGIN_SRC scheme
+(provide all-defined-out)
+#+END_SRC
+
+
+* Problem 8
+ Define the datatypes polar and rectangular for two dimensional points. Now create functions to convert from one to another.
+ Make sure you define predicates to check for polar, rectangular and point. 
+* Solution to Problem 8
+The solution is structured as follows: 
+** purpose
+=point= is used to create data types and predicates of polar and rectangular point forms and also to convert them from one form to another.
+** Example usage
+#+name: prob8_usage
+#+BEGIN_SRC scheme
+(polar-to-rectangular (polar 5 1.2345)) => '(rectangular 1.6499657883928394 4.7199166197225555)
+#+END_SRC
+
+** Signature and Definition
+=point= define constructors polar and rectangular and predicates polar? , rectangular? , point? and also functions which convert one form to another.
+#+name: point
+#+BEGIN_SRC scheme
+;;; polar: [real? real?] -> polar?
+;;; rectangular: [real? real?] -> rectangular?
+;;; point?: any/c -> boolean?
+;;; polar-to-rectangular: polar? -> rectangular?
+;;; rectangular-to-polar: rectangular? -> polar?
+;;; point-equal? : [point? point?] -> boolean? ; within 0.001 of each
+;;; coordinate.
+
+;;; get-x: point? -> real?
+;;; get-y: point? -> real?
+;;; get-r: point? -> real?
+;;; get-t: point? -> real?
+
+(define polar
+  (lambda (r t)
+    (list 'polar r t)))
+
+(define rectangular
+  (lambda (x y)
+    (list 'rectangular x y)))
+
+(define polar?
+  (lambda (ls)
+    (and (list? ls)
+         (= 3 (length ls))
+         (eq? (first ls)
+              'polar)
+         (real? (second ls))
+         (real? (third ls)))))
+
+(define rectangular?
+  (lambda (ls)
+    (and (list? ls)
+         (= 3 (length ls))
+         (eq? (first ls)
+              'rectangular)
+         (real? (second ls))
+         (real? (third ls)))))
+
+(define point?
+  (lambda (ls)
+    (or (polar? ls)
+        (rectangular? ls))))
+
+(define polar-to-rectangular
+  (lambda (ls)
+    (list 'rectangular (* (second ls) (cos (third ls))) (* (second ls) (sin (third ls))))))
+
+(define rectangular-to-polar
+  (lambda (ls)
+    (list 'polar
+          (sqrt
+              (+ (* (second ls) (second ls))
+                 (* (third ls) (third ls))))
+                        (if (< (second ls) 0) (+ pi (atan (/ (third ls) (second ls))))
+                                                                     (atan (/ (third ls) (second ls)))))))
+
+(define point-equal?
+  (lambda (ls lt)
+    (and (<= (- (get-x ls) (get-x lt)) 0.001)
+           (>= (- (get-x ls) (get-x lt)) -0.001)
+             (<= (- (get-y ls) (get-y lt)) 0.001) 
+               (>= (- (get-y ls) (get-y lt)) -0.001)))) 
+
+(define get-x
+  (lambda (ls)
+    (if (rectangular? ls) 
+               (second ls)
+                     (second (polar-to-rectangular ls)))))
+
+(define get-y
+  (lambda (ls)
+    (if (rectangular? ls) (third ls) (third (polar-to-rectangular ls)))))
+
+
+(define get-r
+  (lambda (ls)
+    (if (polar? ls)  
+          (second ls)
+                 (second (rectangular-to-polar ls)))))
+
+
+(define get-t
+  (lambda (ls)
+    (if (polar? ls)
+          (third ls)
+              (third (rectangular-to-polar ls)))))
+
+#+END_SRC
+
+** Test cases
+
+#+NAME: point_tests
+#+BEGIN_SRC scheme
+(define test-point (rectangular 3.0 4.0))
+(check-equal? (get-x test-point) 3.0 "get-x test")
+(check-equal? (get-y test-point) 4.0 "get-y test")
+(check-equal? (polar-to-rectangular (rectangular-to-polar test-point))
+test-point "conversion-equality test")
+
+(define polar-test-point (polar 5.0 2.0))
+(check-equal? (get-r polar-test-point) 5.0 "get-r test")
+(check-equal? (get-t polar-test-point) 2.0 "get-t test")
+(check-equal? (rectangular-to-polar (polar-to-rectangular polar-test-point))
+polar-test-point "polar conversion-equality test")
+#+END_SRC
+
+** Export
+This declaration exports the definition =point=. 
+#+NAME: prob_8_exports
+#+BEGIN_SRC scheme
+(provide all-defined-out)
+#+END_SRC
+
+
+* Tangle
+#+BEGIN_SRC scheme :eval no :noweb yes :tangle main.rkt
+<<lang_racket>>
+<<imports>>
+<<prob_1_exports>>
+<<prob_2_exports>>
+<<prob_3_exports>>
+<<prob_4_exports>>
+<<prob_5_exports>>
+<<prob_6_exports>>
+<<prob_7_exports>>
+<<prob_8_exports>>
+<<reduce>>
+<<reverse>>
+<<list-length>>
+<<compose>>
+<<compose*>>
+<<list-map>>
+<<shape>>
+<<point>>
+<<reduce_tests>>
+<<reverse_tests>>
+<<list-length_tests>>
+<<compose_tests>>
+<<compose*_tests>>
+<<list-map_tests>>
+<<shape_tests>>
+<<point_tests>>
+#+END_SRC
+
+
+
+
+
