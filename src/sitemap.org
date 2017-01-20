@@ -1,0 +1,12 @@
+#+TITLE: Sitemap for project org-docs
+
+   + labs
+     + lab-2
+       + [[file:labs/lab-2/main.org][Org-mode Lab]]
+     + lab-3
+       + [[file:labs/lab-3/index.org][index]]
+   + org-templates
+     + [[file:org-templates/level-0.org][level-0]]
+     + [[file:org-templates/level-1.org][level-1]]
+     + [[file:org-templates/level-2.org][level-2]]
+     + [[file:org-templates/level-3.org][level-3]]
