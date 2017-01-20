@@ -1,2 +1,32 @@
-Hello world
-I am Kanav.
+#+TITLE: Lab 3
+#+AUTHOR: Kanav Gupta
+#+EMAIL: kanav.gupta@students.iiit.ac.in
+
+* Lab 3
+
+* Learned the use of dired 
+
+- opened roll-no folder in dired, using C-x d <file path>
+- created directory src using +
+- moved labs to inside src
+
+* Literate-Tools
+
+- Ran init.sh on the terminal which brought literate tools and makefile in the directory.
+- command pushd .; cd ~/emacs/lisp/org-8.2.10; make; popd; = This navigates to =~/emacs/lisp/org-8.2.10 created builds folder that power literate tools.
+- wrote "Hello" world in index.org and ran make.
+
+* Customising Emacs
+
+** elisp in the *scratch* buffer
+- Activated ido-mode by writing =(ido-mode t)= in .emacs.
+- proxy was set using following commands
+   
+    =(setq url-proxy-services=
+   =(("no_proxy" . "^\\(localhost\\|10.*\\)")=
+
+* Terminal in emacs
+- opened terminal in emacs using =M-x shell= and =M-x term=
+- M-x shell is just a wrapper around your shell program
+- M-x term is a fully featured terminal emulator
+
