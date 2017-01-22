@@ -83,7 +83,7 @@ than given value and one with elements less than or equal to given value.
 #+END_SRC
 
 ** Export
-This declaration exports the definition =reduce=. 
+This declaration exports the definition =split-list=. 
 #+NAME: prob_1_exports
 #+BEGIN_SRC scheme
 (provide split-list)
@@ -129,7 +129,7 @@ The solution is structured as follows:
 #+END_SRC
 
 ** Export
-This declaration exports the definition =reverse=. 
+This declaration exports the definition =flatten-list=. 
 #+NAME: prob_2_exports
 #+BEGIN_SRC scheme
 (provide flatten-list)
@@ -179,7 +179,7 @@ The solution is structured as follows:
 #+END_SRC
 
 ** Export
-This declaration exports the definition =list-length=. 
+This declaration exports the definition =map*=. 
 #+NAME: prob_3_exports
 #+BEGIN_SRC scheme
 (provide reduce)
@@ -228,7 +228,7 @@ Apply reduce of previous assignment on nested lists.
 #+END_SRC
 
 ** Export
-This declaration exports the definition =compose=. 
+This declaration exports the definition =reduce*=. 
 #+NAME: prob_4_exports
 #+BEGIN_SRC scheme
 (provide reduce*)
