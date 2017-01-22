@@ -1,0 +1,260 @@
+#+TITLE: Assignment 3
+#+AUTHOR: Kanav Gupta
+#+EMAIL: kanav.gupta@students.iiit.ac.in
+#+SETUPFILE: ../../org-templates/level-2.org
+#+EXCLUDE_TAGS: boilerplate
+#+PROPERTY: session *scheme*
+#+PROPERTY: results output
+#+PROPERTY: exports code
+#+TAGS: boilerplate(b) notes(n) solution(s)
+
+* Introduction
+This is Assignment 3 on lists of Racket language consisting of 4 problems solved by *Kanav Gupta* Roll No. *20161151*
+* Preamble
+
+The first thing is to add the =#lang racket= line at the top
+of your 
+This needs to be done once at the beginning for each file.
+=:session none= means that the line =#lang racket= is not to
+be input into the running scheme session =*scheme*=.
+
+
+** Module language
+#+name: lang_racket
+#+BEGIN_SRC scheme :session none 
+#lang racket
+#+END_SRC
+
+** Imports
+This section lists all the modules that your module needs to
+import.  You may need to add more =require= declarations
+depending on your homework. 
+
+#+NAME: imports
+#+BEGIN_SRC scheme  
+(require racket/list)
+(require rackunit)
+(require racket/contract)
+#+END_SRC
+
+
+* Problem 1
+ Given a list of numbers and a number, create a function split-list that returns two lists (Lists of lists) such that:
+
+   - The first list contains numbers from the original list which are less than or equal to the given number.
+   - The second list contains numbers from the original list which are greater than the given number.
+   
+* Solution to Problem 1
+The solution is structured as follows: 
+** purpose
+ =split-list= takes a list and value and returns two lists one with elements greater than given value and one with elements less than or equal to given value.
+ 
+** Example usage
+#+name: prob1_usage
+#+BEGIN_SRC scheme
+(split-list '(1 2 3 4) 5) => '((1 2 3 4) ()) 
+#+END_SRC
+
+** Signature and Definition
+=split-list= takes a list and a integer value as input and returns a list containing two lists one with elements greater
+than given value and one with elements less than or equal to given value.
+#+name: split-list 
+#+BEGIN_SRC scheme
+;;; split-list : [(list?) (real?)] -> (list?)
+(define func
+  (lambda (ls x a b)
+    (if (empty? ls) (list a b)
+       (if (<= (first ls) x)
+           (func (rest ls) x (append a (list (first ls))) b)
+              (func (rest ls) x a (append b (list (first ls))))))))
+(define split-list
+  (lambda (ls x)
+    (func ls x '() '())))
+#+END_SRC
+
+** Test cases
+
+#+NAME: prob1_tests
+#+BEGIN_SRC scheme
+(check-equal? (split-list '() 3) '(() ()) "test 1")
+(check-equal? (split-list '(1 2 3 4) 5) '((1 2 3 4) ()) "test 2")
+(check-equal? (split-list '(3 1 2 6 5 7 5) 5) '((3 1 2 5 5) (6 7)) "test 3")
+(check-equal? (split-list '(3 1 2 6 5 7 5) 0) '(() (3 1 2 6 5 7 5)) "test 4")
+#+END_SRC
+
+** Export
+This declaration exports the definition =reduce=. 
+#+NAME: prob_1_exports
+#+BEGIN_SRC scheme
+(provide split-list)
+(provide func)
+#+END_SRC
+
+
+* Problem 2
+Given a nested list structure, write a function flatten-list which flattens the structure into a single dimensional list. 
+* Solution to Problem 2
+The solution is structured as follows: 
+** purpose
+ =flatten-list= converts nested list into one-dimesional list
+** Example usage
+#+name: prob2_usage
+#+BEGIN_SRC scheme
+(flatten-list '(1 (2 3 (4)))) => '(1 2 3 4)
+#+END_SRC
+
+** Signature and Definition
+=flatten-list= takes a list as a input and returns one-dimensional list.
+#+name: flatten-list
+#+BEGIN_SRC scheme
+;;; flatten-list : (listof value?) -> (listof value?)
+(define flatten-list
+  (lambda (ls)
+   (if (empty? ls) '()
+        (if (pair? ls)
+            (append (flatten-list (first ls)) (flatten-list (rest ls)))
+                     (list ls)))))
+
+#+END_SRC
+
+** Test cases
+
+#+NAME: prob2_tests
+#+BEGIN_SRC scheme
+(check-equal? (flatten-list '()) '() "test 1")
+(check-equal? (flatten-list '((1) () (2))) '(1 2) "test 2")
+(check-equal? (flatten-list '((1 2) ())) '(1 2) "test 3")
+(check-equal? (flatten-list '(() (1) (3 4))) '(1 3 4) "test 4")
+(check-equal? (flatten-list '(1 (2 (3 4) 5) 6)) '(1 2 3 4 5 6) "test 5")
+#+END_SRC
+
+** Export
+This declaration exports the definition =reverse=. 
+#+NAME: prob_2_exports
+#+BEGIN_SRC scheme
+(provide flatten-list)
+#+END_SRC
+
+
+* Problem 3
+Recall function list-map from assignment 2. Using the same, implement a function map* which takes a function op and a nested list l as arguments and applies the function to every element of the list. 
+* Solution to Problem 3
+The solution is structured as follows: 
+** purpose
+ map a given function in a nested list.
+** Example usage
+#+name: prob3_usage
+#+BEGIN_SRC scheme
+(map* even? '(2 (4 3) ())) => '(#t (#t #f) ())
+#+END_SRC
+
+** Signature and Definition
+=map*= takes a list as a input and returns a list mapped by a given function.
+#+name: map*
+#+BEGIN_SRC scheme
+;;; map* : (listof value?) -> (listof value?)
+(define reduce
+  (lambda (f init ls)
+    (if (empty? ls) init (reduce f (f (first ls) init) (rest ls)))))
+
+(define list-map
+  (lambda (f ls)
+    (reduce (lambda (p q) (cons (f p) q)) '() (reverse ls))))
+
+(define (map* f ls)
+  (let func ((temp ls))
+    (if (null? temp) temp
+          (if (pair? temp) (list-map func temp)
+                       (f temp)))))
+
+#+END_SRC
+
+** Test cases
+
+#+NAME: prob3_tests
+#+BEGIN_SRC scheme
+(check-equal? (map* even? '(2 (4 3) ())) '(#t (#t #f) ()) "test 1")
+(check-equal? (map* add1 '((1 2) 3 (4 5) (6 7))) '((2 3) 4 (5 6) (7 8)) "test 2")
+(check-equal? (map* boolean? '(1 #t #f -2 0)) '(#f #t #t #f #f) "test 3")
+#+END_SRC
+
+** Export
+This declaration exports the definition =list-length=. 
+#+NAME: prob_3_exports
+#+BEGIN_SRC scheme
+(provide reduce)
+(provide list-map)
+(provide map*)
+#+END_SRC
+
+
+* Problem 4
+ Recall reduce function from Assignment-2.
+
+Your task is to write a reduce* fucntion which takes a binary function op, an initial value init and a nested list l as input and reduces the list to an answer. 
+* Solution to Problem 4
+The solution is structured as follows: 
+** purpose
+Apply reduce of previous assignment on nested lists. 
+** Example usage
+#+name: prob4_usage
+#+BEGIN_SRC scheme
+(reduce* + 0 '(1 (2 3) (4 5))) => 15
+#+END_SRC
+
+** Signature and Definition
+=reduce*=  This program takes a list as a input and evaluate the list by appling particular function on entire list. 
+#+name: reduce*
+#+BEGIN_SRC scheme
+;;; reduce* : [procedure?, value?, (listof value?)] -> value?
+(define reduce*
+  (lambda (fn init ls)
+    (reduce fn init (flatten-list ls))))
+
+#+END_SRC
+
+** Test cases
+
+#+NAME: prob4_tests
+#+BEGIN_SRC scheme
+(define (binary-and x y)
+    (and x y))
+
+  (check-equal? (reduce* binary-and #t '((#t #t) (#t #t) #f)) #f "test 1")
+  (check-equal? (reduce* binary-and #t '(#t (#t #t))) #t "test 2")
+  (check-equal? (reduce* + 0 '(1 (2 3) (4 5))) 15 "test 3")
+  (check-equal? (reduce* * 1 '((3 5) (2))) 30 "test 4")
+
+#+END_SRC
+
+** Export
+This declaration exports the definition =compose=. 
+#+NAME: prob_4_exports
+#+BEGIN_SRC scheme
+(provide reduce*)
+(provide binary-and)
+#+END_SRC
+
+
+* Tangle
+#+BEGIN_SRC scheme :eval no :noweb yes :tangle main.rkt
+<<lang_racket>>
+<<imports>>
+<<prob_1_exports>>
+<<prob_2_exports>>
+<<prob_3_exports>>
+<<prob_4_exports>>
+<<split-list>>
+<<flatten-list>>
+<<map*>>
+<<reduce*>>
+<<prob1_tests>>
+<<prob2_tests>>
+<<prob3_tests>>
+<<prob4_tests>>
+#+END_SRC
+
+
+
+
+
