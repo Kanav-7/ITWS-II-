@@ -1,6 +1,6 @@
 //Java Script for populating deatails.html file
 
-var table = document.getElementById("students");
+var table = document.getElementById("students-body");
 for(var name in data)
 {
 	var tr = document.createElement("tr");
