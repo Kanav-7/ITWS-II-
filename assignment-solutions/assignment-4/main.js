@@ -36,11 +36,10 @@ var interestingSort = function(inpString){
 };
 
 var getMeNextFirst = function(inpString){
-	var st = inpString.trim();
-	var arr = st.split("");
+	var arr = inpString.trim().replace(/ +/g,' ').split("");
 	for(var i=0; i < arr.length - 1 ;i++)
 	{
-		if(arr[i] == ' ')
+		if(arr[i] === ' ')
 		{
 			var temp = arr[i];
 			arr[i] = arr[i+1];
@@ -56,3 +55,4 @@ module.exports.fifthDay = fifthDay;
 module.exports.altSpaceToUnderscore = altSpaceToUnderscore;
 module.exports.interestingSort = interestingSort;
 module.exports.getMeNextFirst = getMeNextFirst;
+
