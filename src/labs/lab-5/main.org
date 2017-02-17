@@ -1,0 +1,92 @@
+#+Title: ITWS-2 Lab Task-5
+#+AUTHOR: Kanav Gupta
+#+EMAIL: kanav.gupta@students.iiit.ac.in
+
+* Introduction
+- This Lab Task covered the concepts of =Object Oriented Programming in Javascript=
+
+
+* Personal Details
+#+BEGIN_SRC js :tangle personcode.js
+function Person(name, age, sex)
+{
+	this.name = name;
+	this.age = age;
+	this.sex = sex;
+
+	this.getAge = function()
+	{
+		return this.age;
+	};
+};
+
+Person.prototype.getName = function()
+{
+	return this.name;
+};
+
+
+#+END_SRC 
+
+
+* Classroom Details
+#+BEGIN_SRC js :tangle classroomcode.js
+function Person(name, age, sex)
+{
+	this.name = name;
+	this.age = age;
+	this.sex = sex;
+
+	this.getAge = function()
+	{
+		return this.age;
+	};
+};
+
+Person.prototype.getName = function()
+{
+	return this.name;
+};
+
+function Teacher(name,age,sex,Subject)
+{
+	Person.call(this,name,age,sex);
+	this.Subject = Subject;
+};
+
+function Student(name, age, sex,RollNo, Subjects)
+{
+	Person.call(this, name, age, sex);
+	this.RollNo = RollNo;
+	this.Subjects = Subjects;
+};
+
+function getParticipants(subjectName,persons)
+{
+	var participants = {"Teacher" : [], "Students" : []}
+	for (var i in persons)
+	{
+		if(persons[i] instanceof Student)
+		{
+			var temp = persons[i].Subjects;
+			for(var j in temp)
+			{
+				if(temp[j] == subjectName)
+				{
+					participants.Students.push(persons[i].RollNo);
+				}
+			}
+		}
+
+		if(persons[i] instanceof Teacher)
+		{
+			if(persons[i].Subject === subjectName)
+			{
+				participants.Teacher.push(persons[i].name);
+			}
+		}
+	}
+	return participants;
+};
+
+#+END_SRC
