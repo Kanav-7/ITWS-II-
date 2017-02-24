@@ -1,0 +1,39 @@
+#+title:  ITWS2 lab task-6
+#+AUTHOR: Sayak Kundu
+#+Email: sk.sayakkundu1997@gmail.com
+#+SETUPFILE: ../../org-templates/level-2.org
+#+EXCLUDE_TAGS: boilerplate
+#+PROPERTY: session *html*
+#+PROPERTY: results output
+#+PROPERTY: exports code
+#+TAGS: boilerplate(b) notes(n) solution(s)
+
+* view-your-profile.html
+#+BEGIN_SRC html :tangle view-your-profile.html
+<!Doctype HTML>
+
+<html>
+	<head>
+	<title>view-your-profile</title>
+	</head>
+	<body>
+
+		<form action="https://web.iiit.ac.in/~harshit.harchani/itws2/profile/" method="POST" enctype="multipart/form-data">
+
+		Enter &nbsp; Name: &nbsp; &nbsp; &nbsp; <input type="text" name="name">
+		<br/>
+		<br/>
+		Enter &nbsp; Age: &nbsp; &nbsp; &nbsp; <input type="number" name="age" min = "0" max = "150">
+		<br/>
+		<br/>
+		<input type="File" name="profile_pic">
+		<br>
+		<br>
+		<input type="Submit" value="Submit">
+		<br>
+		<br>
+		</form>
+	</body>
+</html>
+
+#+END_SRC
