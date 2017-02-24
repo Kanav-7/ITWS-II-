@@ -1,0 +1,125 @@
+#+title: Lab Task - 6
+#+AUTHOR: Kanav Gupta
+#+Email: kanav.gupta@students.iiit.ac.in
+
+#+SETUPFILE: ../../org-templates/level-2.org
+#+EXCLUDE_TAGS: boilerplate
+#+PROPERTY: session *html*
+#+PROPERTY: results output
+#+PROPERTY: exports code
+#+TAGS: boilerplate(b) notes(n) solution(s)
+
+* view-everyones-profile.html
+#+BEGIN_SRC html :tangle view-everyones-profile.html
+   <!DOCTYPE html>
+  <html>
+    <head>
+      <title>View everyone's profile</title>
+      <meta charset="utf-8">
+      <style>
+  * {
+    box-sizing: border-box;
+    margin: 0;
+  }
+
+  body {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    color: #333;
+  }
+
+  html,
+  body,
+  .row {
+    height: 100%;
+    width: 100%;
+  }
+
+  .row {
+    padding-top: 1em;
+  }
+
+  .row:before,
+  .row:after {
+    display: table;
+    content: " ";
+  }
+
+  .row:after {
+    clear: both;
+  }
+
+  .list,
+  .profile {
+    float: left;
+  }
+
+  .list {
+    width: 40%;
+  }
+
+  .profile {
+    width: 60%;
+    position: fixed;
+    right: 0;
+    text-align: center;
+  }
+
+  .profile img {
+    max-height: 100px;
+    border-radius: 50px;
+  }
+
+  .profile div p:first-child {
+    font-size:  .8em;
+    border-top: 1px solid #ddd;
+  }
+      </style>
+    </head>
+    <body>
+      <div class="row">
+        <div class="list">
+          <ul></ul>
+        </div>
+        <div class="profile">
+          </div>
+        </div>
+      </div>
+      <script src="https://web.iiit.ac.in/~harshit.harchani/jquery.js"></script>
+      <script src="view-everyones-profile.js"></script>
+    </body>
+  </html>
+#+END_SRC
+* view-everyones-profile.js
+#+BEGIN_SRC js :tangle view-everyones-profile.js
+$(document).ready(function()
+ {
+ 	$.ajax({
+ 		url: 'https://web.iiit.ac.in/~harshit.harchani/itws2/profiles/',
+          method: 'POST',
+          success: function(value){
+          	          var i,string="";
+
+          	for(i in value)
+      		{
+          	 	//string += '<li>' + '<a href=\"#\"+value[i].url>' + value[i].name + '</a></li>';
+                   string+='<li>' + '<a href=\"#\" onclick=\'display(\"'+value[i].url+'\");\'>'
+                   string+= value[i].name + '</a>' + '</li>';
+              }
+          	          $("ul").html(string);
+          },
+ 	});
+     });
+ function display(element)
+{
+        $.ajax({
+url: 'https://web.iiit.ac.in/~harshit.harchani/itws2' + element,
+method: 'POST',
+
+success: function (value){
+     var ans = "<img src=\""+value.image_url+"\"><h2>" + value.name + "</h2><div><p>Works at</p><p>" 
+     ans += value.company+"</p></div><div><p>Lives at</p><p>"+value.address+"</p></div><div><p>Contact</p><p>"+value.phoneNumber+"</p></div>"
+     $(".profile").html(ans);
+},
+});
+}
+#+END_SRC
