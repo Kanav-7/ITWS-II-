@@ -1,0 +1,765 @@
+#+TITLE: Javascript OOP Assignment
+#+AUTHOR: Kanav Gupta
+#+EMAIL: kanav.gupta@students.iiit.ac.in
+
+#+BEGIN_SRC html :tangle index.html
+<!DOCTYPE html>
+<html>
+<head>
+		<title>ITWS Assignment 6 | [[20161151]]</title>
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+<meta content="utf-8" http-equiv="encoding">
+    <script src="./main.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+<link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'  type='text/css'>
+    
+</head>
+
+<body style="background-color:#efffff">
+		 <div class="container"> 
+      <h1 align="center" class="headlight" >Javascript OOP</h1>
+      <hr>
+      <div> <h3 align="center" > Add New Student</h3>
+      <br>
+      <form id="addNewStudent" style="text-align:center">
+      <label for="in"><h4><b>Enter Roll No.:</b></h4></label>
+      <br>
+      <input class="form-control" name="roll" type="text" id="in">
+      <br>
+      <br>
+      <label for="nm"><h4><b>Enter Name:</b></h4></label> 
+      <input class="form-control" name="name" type="text" id="nm">
+      <br>
+      <br>
+      <label for="yr"><h4><b>Enter Year:</b></h4> </label>
+      <input class="form-control" name="year" type="text" id="yr">
+      <br>
+      <br>
+      <button type="button" onclick="addNewStudent()" class="btn btn-success">ADD STUDENT</button>
+      </form>
+      </div>
+      <br/>
+      <br/>
+      <br/>
+      <br/>
+      <hr>
+
+      <div>
+      <h3 align="center">Enrolled Students</h3>
+      <table id="allStudents" class="table table-striped" align="center" width="100%">
+       <thead>
+        <tr>
+                <td width="33%"><h3>Roll</h3></td>
+                <td width="33%"><h3>Name</h3></td>
+                <td width="33%"><h3>Year</h3></td>
+        </tr>
+        </thead>
+        <tbody>
+     	</tbody>
+	</table>
+  </div>
+
+
+
+<br/>
+<br/>
+<br/>
+<br/>
+<hr>
+
+<div>
+<h3 align="center">Add New Course </h3>
+<br>
+<br>
+<form id="addNewCourse" style="text-align:center">
+      <label for="id"><h4><b>Enter Course ID:</b></h4></label> 
+      <input class="form-control" name="id" type="text" id="id">
+      <br>
+      <br>
+      <label for="name"><h4><b>Enter Course Name:</b></h4>  </label> 
+      <input class="form-control" name="name" type="text" id="name">
+      <br>
+      <br>
+  	  <button type="button" onclick="addNewCourse()" class="btn btn-success">ADD COURSE</button>
+      <br>
+</form>
+</div>
+
+<br/>
+<br/>
+<br/>
+<br/>
+<hr>
+
+<div>
+<h3 align="center">All Courses</h3>
+<table id="allCourses" align="center" class="table table-striped" width="100%">
+       <thead>
+        <tr>
+                <td width="50%"><h3>Id</h3></td>
+                <td width = "50%"><h3>Name</h3></td>
+        </tr>
+       </thead>
+       <tbody>
+       
+       </tbody>
+</table>
+</div>
+
+<br/>
+<br/>
+<br/>
+<br/>
+<hr>
+<div>
+<h3 align="center"> Add Student to Course</h3>
+<br>
+<form style="text-align:center">
+      <div class="col-md-6 col-xs-6 col-lg-6">
+        <label for="StudentList"><h4><b> Select Student:</b></h4></label> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <select  class="btn btn-default dropdown-toggle" id="StudentList" data-style="btn-primary">
+         
+      </select> 
+      </div> 
+      <div class="col-md-6 col-xs-6 col-lg-6">
+        <label for="CourseList"><h4><b>Select Course:</b></h4></label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        
+      <select class="btn btn-default dropdown-toggle" id="CourseList"  data-style="btn-primary">
+          
+      </select>  
+      </div>
+      <br>
+      <br>
+      <br>
+      <br>  
+          <button type="button" onclick='AddStudentToCourse(StuObj(document.getElementById("StudentList").value), CourObj(document.getElementById("CourseList").value))' class="btn btn-success">ADD</button>
+          </form>
+<br/>
+<br/>
+<br/>
+<br/>
+<hr>
+
+<div>
+<h3 align="center"> Drop Student from Course</h3>
+<br>
+<form style="text-align:center">
+      <div class="col-md-6 col-xs-6 col-lg-6">
+        <label for="StudentList"><h4><b> Select Student:</b></h4></label> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <select  class="btn btn-default dropdown-toggle" id="StudentList3" data-style="btn-primary">
+         
+      </select> 
+      </div> 
+      <div class="col-md-6 col-xs-6 col-lg-6">
+        <label for="CourseList"><h4><b>Select Course:</b></h4></label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        
+      <select class="btn btn-default dropdown-toggle" id="CourseList3"  data-style="btn-primary">
+          
+      </select>  
+      </div>
+      <br>
+      <br>
+      <br>
+      <br>  
+          <button type="button" onclick='DropStudentFromCourse(StuObj(document.getElementById("StudentList3").value), CourObj(document.getElementById("CourseList3").value))' class="btn btn-success text-center" >DROP</button>
+          </div>
+          </form>
+          </div>
+
+<br/>
+<br/>
+<br/>
+<br/>
+<hr>
+
+
+<div>
+<h3 align="center">Remove Student</h3>
+<br>
+<br>
+  <form>
+  <div class="col-md-6 col-xs-6 col-lg-6">
+    <label for="StudentList1"><h4><b>Select Student:</b></h4></label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <select  id="StudentList1" class="btn btn-default dropdown-toggle" data-style="btn-primary">
+
+      </select>
+      </div>
+    <div class="col-md-6 col-xs-6 col-lg-6">  
+      <button type="button" onclick='RemoveStudent(StuObj(document.getElementById("StudentList1").value))' class="btn btn-success">REMOVE STUDENT</button>
+      </div>
+  </form>
+</div>
+
+<br/>
+<br/>
+<br/>
+<br/>
+<hr>
+<div>
+<h3 align="center">Remove Course</h3>
+<br>
+<br>
+  <form>
+  <div class="col-md-6 col-xs-6 col-lg-6">  
+  <label for="CourseList1"><h4><b>Select Course:</b></h4></label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <select  id="CourseList1" class="btn btn-default dropdown-toggle" data-style="btn-primary">
+          
+      </select> 
+    </div>
+    <div class="col-md-6 col-xs-6 col-lg-6">     
+     <button type="button" onclick='RemoveCourse(CourObj(document.getElementById("CourseList1").value))' class="btn btn-success">REMOVE COURSE</button>
+     </div>
+  </form>
+</div>
+ 
+<br/>
+<br/>
+<br/>
+<br/>
+<hr> 
+
+<div>
+<h3 align="center">Courses Student is Enrolled</h3>
+<br>
+<br>
+  <form>
+  <div class="col-md-6 col-xs-6 col-lg-6">  
+  <label for="StudentList2"><h4><b>Select Student:</b></h4></label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <select id="StudentList2" class="btn btn-default dropdown-toggle" data-style="btn-primary">
+          
+      </select>  
+      </div>
+      <div class="col-md-6 col-xs-6 col-lg-6">  
+    <button type="button" onclick='viewCoursesTaken(StuObj(document.getElementById("StudentList2").value))' class="btn btn-success">DISPLAY COURSES</button>
+    </div>
+  </form>
+  <br>
+  <br>
+  <br>
+  <table id="PrintCoursesTable" align="center" class="table table-striped"  width="100%">
+       <thead>
+        <tr>
+                <td width="50%"><h3>Id</h3></td>
+                <td width = "50%"><h3>Name</h3></td>
+        </tr>
+       </thead>
+       <tbody>
+       
+       </tbody>
+</table>
+</div>
+<br/>
+<br/>
+<br/>
+<br/>
+<hr>
+<div>
+<h3 align="center">Students Enrolled in a Course</h3>
+<br>
+<br>
+  <form>
+  <div class="col-md-6 col-xs-6 col-lg-6"> 
+  <label for="CourseList2"><h4><b>Select Course:</b></h4></label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <select id="CourseList2" class="btn btn-default dropdown-toggle" data-style="btn-primary">
+          
+      </select>  
+     </div>
+     <div class="col-md-6 col-xs-6 col-lg-6"> 
+          <button type="button" onclick='viewEnrolled(CourObj(document.getElementById("CourseList2").value))' class="btn btn-success">DISPLAY STUDENTS</button>
+          </div>
+  </form>
+  <br>
+  <br>
+  <br>
+  <table id="PrintStudentsTable" align="center" class="table table-striped"  width="100%">
+       <thead>
+        <tr>
+                <td width="33%"><h3>Roll</h3></td>
+                <td width="33%"><h3>Name</h3></td>
+                <td width="33%"><h3>Year</h3></td>
+        </tr>
+       </thead>
+       <tbody>
+       
+       </tbody>
+</table>
+</div>
+        
+          
+<br/>
+<br/>
+<br/>
+<br/>
+<hr>
+</div>
+</body> 
+</html>
+
+#+END_SRC
+
+#+BEGIN_SRC html :tangle main.js
+
+var allStudents = [];
+var allCourses = [];
+
+var makeStudent = function(r, nm, yr)
+{
+  student = {};
+   var roll = r;
+   var name = nm;       
+   var year = yr;
+   var courses = [];
+
+  var valid_name = /^[A-Za-z]+$/;
+  if(!nm.match(valid_name))
+  {
+    alert("Input Error");
+    return -1;
+  }     
+  var valid_year = /^[U][G][1-6]$/;
+  if(!yr.match(valid_year))
+  {
+    alert("Input Error");
+    return -1;
+  }
+  if(r > 20169999 || r < 20110000 || isNaN(r))
+  {
+    alert("Input Error");
+    return -1;
+  }
+
+student.getRoll = function()  {
+  return roll;
+}
+student.getName = function() {
+  return name;
+}
+student.getYear = function() {
+  return year;
+}
+
+student.getCourseIds=function(){
+        return courses;
+};
+
+student.addCourse=function(id){
+        courses.push(id);
+};
+
+student.dropCourse=function(id){
+        courses.splice(courses.indexOf(id), 1);
+};
+  
+student.findCourse = function(id){
+        for(var i in courses)
+        {
+                if(courses[i] === id)
+                        return true;
+        }
+        return false;   
+}
+
+
+  return student;
+}
+
+var makeCourse = function(i, nm)
+{
+  var course = {};
+  var id = i;
+  var name = nm;
+  var students = [];
+
+  var valid_id = /^[A-Z][A-Z][A-Z][0-9][0-9][0-9]$/;
+  if(!i.match(valid_id))
+  {
+        alert("Input Error");
+        return -1;
+  }
+  var valid_name = /^[A-Za-z]+$/;;
+  if(!nm.match(valid_name))
+  {
+        alert("Input Error");
+        return -1;
+  }
+  course.getId = function () {
+    return id;
+  }
+
+  course.getName = function () {
+    return name;
+  }
+
+  course.getStudents = function() {
+    return students;
+  }
+  course.addStudent = function (roll) {
+        students.push(roll);
+  }
+  course.dropStudent = function (roll) {
+        students.splice(students.indexOf(roll), 1);
+  }
+  course.findStudent = function (roll) {
+        for(var i in students)
+        {
+                if(students[i] === roll)
+                        return true;
+        }
+        return false;
+  }
+  return course;
+}
+
+function viewAllCourses(){
+  var nm = document.getElementById("addNewCourse").name.value;
+  var i = document.getElementById("addNewCourse").id.value;
+
+  var courses_table = document.getElementById("allCourses");
+  var new_row = courses_table.insertRow(allCourses.length);
+  var  new_id = new_row.insertCell(0);
+  var new_name = new_row.insertCell(1);
+
+  new_id.innerHTML = allCourses[allCourses.length - 1].getId();
+  new_name.innerHTML = allCourses[allCourses.length - 1].getName();
+
+  return allCourses;
+}
+
+function viewAllStudents(){
+  var nm = document.getElementById("addNewStudent").name.value;
+  var r = document.getElementById("addNewStudent").roll.value;
+  var yr = document.getElementById("addNewStudent").year.value;
+
+  var student_table = document.getElementById("allStudents");
+  var new_row = student_table.insertRow(allStudents.length);
+  var new_roll = new_row.insertCell(0);
+  var new_name = new_row.insertCell(1);
+  var new_year = new_row.insertCell(2); 
+
+  new_roll.innerHTML = allStudents[allStudents.length - 1].getRoll();
+  new_name.innerHTML = allStudents[allStudents.length - 1].getName();
+  new_year.innerHTML = allStudents[allStudents.length - 1].getYear();
+
+  return allStudents;
+}
+
+
+function addNewStudent() {
+  var nm = document.getElementById("addNewStudent").name.value;
+  var r = document.getElementById("addNewStudent").roll.value;
+  var yr = document.getElementById("addNewStudent").year.value;
+  for(var x in allStudents)
+        if(allStudents[x].getRoll() === r)
+        {
+                alert("Roll No.  "+ r + " already present. Check Input");
+                return;
+        }
+
+        var temp = makeStudent(r, nm, yr);
+
+  if(temp === -1)
+    return; 
+        allStudents.push(temp);
+  
+  viewAllStudents();
+
+  var select = document.getElementById("StudentList");  
+  var el = document.createElement("option");
+  el.value = allStudents[allStudents.length-1].getRoll();
+  el.text = allStudents[allStudents.length-1].getName();
+  select.appendChild(el);
+
+  var select = document.getElementById("StudentList1");
+  var el = document.createElement("option");
+  el.value = allStudents[allStudents.length-1].getRoll();
+  el.text = allStudents[allStudents.length-1].getName();
+  select.appendChild(el);
+
+  var select = document.getElementById("StudentList2");
+  var el = document.createElement("option");
+  el.value = allStudents[allStudents.length-1].getRoll();
+  el.text = allStudents[allStudents.length-1].getName();
+  select.appendChild(el);
+
+  var select = document.getElementById("StudentList3");
+  var el = document.createElement("option");
+  el.value = allStudents[allStudents.length-1].getRoll();
+  el.text = allStudents[allStudents.length-1].getName();
+  select.appendChild(el);
+
+  document.getElementById("addNewStudent").name.value = "";
+  document.getElementById("addNewStudent").roll.value = "";
+  document.getElementById("addNewStudent").year.value = "";
+  var str = nm + " Added"
+  alert(str);
+  return;
+}               
+
+function addNewCourse() {
+  var nm = document.getElementById("addNewCourse").name.value;
+  var i = document.getElementById("addNewCourse").id.value;
+  for(var x in allCourses)
+        if(allCourses[x].getId() === i)
+        {
+                alert(i + " already present. Check Input");
+                return;
+        }
+  var temp= makeCourse(i,nm);
+  if(temp === -1)
+        return ;
+  allCourses.push(temp);
+
+  viewAllCourses();
+  
+  var select = document.getElementById("CourseList");
+  var el = document.createElement("option");
+  el.value = allCourses[allCourses.length-1].getName();
+  el.text = allCourses[allCourses.length-1].getName();
+  select.appendChild(el);
+
+  var select = document.getElementById("CourseList1");
+  var el = document.createElement("option");
+  el.value = allCourses[allCourses.length-1].getName();
+  el.text = allCourses[allCourses.length-1].getName();
+  select.appendChild(el);
+
+  var select = document.getElementById("CourseList2");
+  var el = document.createElement("option");
+  el.value = allCourses[allCourses.length-1].getName();
+  el.text = allCourses[allCourses.length-1].getName();
+  select.appendChild(el);
+  
+
+  var select = document.getElementById("CourseList3");
+  var el = document.createElement("option");
+  el.value = allCourses[allCourses.length-1].getName();
+  el.text = allCourses[allCourses.length-1].getName();
+  select.appendChild(el);
+
+  document.getElementById("addNewCourse").name.value = "";
+  document.getElementById("addNewCourse").id.value = "";
+  var str = nm + " Added"
+  alert(str);
+  return ;  
+}
+
+function StuObj(Student)
+{
+  if(Student == "")
+    return -1;
+  var i;
+  for(i in allStudents)
+    if(allStudents[i].getRoll() == Student)
+      break;
+  return allStudents[i];
+}
+
+function CourObj(Course)
+{
+  if(Course == "")
+    return -1;
+  var j;
+  for(j in allCourses)
+    if(allCourses[j].getName() == Course)
+      break;
+  return allCourses[j];
+}
+
+
+function AddStudentToCourse(Student, Course)
+{
+  if(Student == -1 || Course == -1){
+    alert("Course or Student not present");
+    return;  
+  }
+  var temp = Course.getStudents();
+  for(var k in temp)
+  {
+        if(temp[k] === Student.getRoll())
+        {
+                str = Student.getName() + " is already added to " + Course.getName() + ". Check Input";
+                alert(str);
+                return;
+        }
+  }
+  Course.addStudent(Student.getRoll());
+  Student.addCourse(Course.getId());
+  var str = Student.getName() + " is added to " + Course.getName();
+  alert(str);
+  return ;
+}
+
+function DropStudentFromCourse(Student, Course)
+{   
+   if(Student == -1 || Course == -1){
+      alert("Course or Student not present");
+      return;
+   }  
+  var temp = Course.getStudents();
+  var flag = 1;
+  for(var k in temp)
+  {
+        if(temp[k] === Student.getRoll())
+        {
+                flag = 0;
+        }
+  }
+  if(flag === 1)
+  {
+        var str = Student.getName() + " is not enrolled for " + Course.getName();
+                alert(str);
+      return;
+  }
+  Course.dropStudent(Student.getRoll());
+  Student.dropCourse(Course.getId());
+
+  alert(Student.getName() + " dropped from " + Course.getName());
+  return ;
+}
+
+function RemoveCourse(Course){
+  if (Course == -1){
+      alert("Course not present");
+      return allCourses;
+  }
+  var j = allCourses.indexOf(Course);
+   for(var i in allStudents)
+   {
+      cores = allStudents[i].getCourseIds()
+          for(var k in cores)
+          {
+            if(cores[k] === Course.getId())
+            {
+              allStudents[i].dropCourse(Course.getId());
+             }
+          }
+   } 
+   //console.log(j);
+   
+   document.getElementById("CourseList").remove(j);
+   document.getElementById("CourseList2").remove(j);
+   document.getElementById("CourseList1").remove(j);
+   document.getElementById("CourseList3").remove(j);
+   //console.log(j);
+   document.getElementById("allCourses").deleteRow(parseInt(j)+1);
+
+   allCourses.splice(j,1);
+   var str = Course.getName() + " Removed";
+   alert(str);
+   return allCourses;
+} 
+function RemoveStudent(Student)
+{ 
+   if(Student == -1){
+    alert("Student not present");
+    return allStudents;
+  }
+   for(var i in allCourses)
+   {
+                stud = allCourses[i].getStudents();
+      for(var k in stud)
+                {
+                        if(stud[k] === Student.getRoll())
+                                {
+                                        allCourses[i].dropStudent(Student.getRoll());
+                                }
+                }
+   }
+   //console.log(j);
+   var j = allStudents.indexOf(Student);
+   document.getElementById("StudentList").remove(j);
+   document.getElementById("StudentList2").remove(j);
+   document.getElementById("StudentList1").remove(j);
+   document.getElementById("StudentList3").remove(j);
+   document.getElementById("allStudents").deleteRow(parseInt(j)+1);
+   allStudents.splice(j,1); 
+   var str = Student.getName() + " Removed";
+   alert(str);
+   return allStudents; 
+}
+
+function viewEnrolled(course){
+  if(course == -1){
+    alert("Course not present");
+    return;
+  }
+  var table = document.getElementById("PrintStudentsTable");
+  var deleterow = table.rows.length;    
+  while(--deleterow) {
+        table.deleteRow(deleterow);
+  }
+
+  var students = course.getStudents();
+  //console.log(students);
+  for(j in students) {
+      var row = table.insertRow(-1);
+      var roll = row.insertCell(0);
+      var name = row.insertCell(1);
+      var year = row.insertCell(2);
+
+      var k;
+      for(k in allStudents)
+        if(allStudents[k].getRoll() === students[j])
+                break;
+      roll.innerHTML = allStudents[k].getRoll();
+      name.innerHTML = allStudents[k].getName();
+      year.innerHTML = allStudents[k].getYear();
+    }
+    return;
+  }
+
+
+
+function viewCoursesTaken(student) {
+  if(student == -1){
+    alert("Student not present");
+    return;
+  }
+
+var table = document.getElementById("PrintCoursesTable");
+var deleterow = table.rows.length;      
+while(--deleterow) {
+    table.deleteRow(deleterow);
+  }
+ //console.log(i);
+  var courses = student.getCourseIds();
+  var j;
+  //console.log(courses);
+  for(j in courses) {
+      var row = table.insertRow(-1);
+      var id = row.insertCell(0);
+      var name = row.insertCell(1);
+
+      
+      var k;
+      for(k in allCourses)
+        if(allCourses[k].getId() === courses[j])
+                break;
+      id.innerHTML = allCourses[k].getId();
+      name.innerHTML = allCourses[k].getName();
+    }
+    return;
+  }
+
+
+
+module.exports.makeStudent = makeStudent;
+module.exports.makeCourse = makeCourse;
+module,exports.addNewStudent = addNewStudent;
+module,exports.addNewCourse = addNewCourse;
+module.exports.AddStudentToCourse = AddStudentToCourse;
+module.exports.DropStudentFromCourse = DropStudentFromCourse;
+module.exports.RemoveCourse = RemoveCourse;
+module.exports.RemoveCourse = RemoveCourse;
+module.exports.viewEnrolled = viewEnrolled;
+module.exports.viewCoursesTaken = viewCoursesTaken;
+module.exports.viewAllCourses = viewAllCourses;
+module.exports.viewAllStudents = viewAllStudents;
+module.exports.StuObj = StuObj;
+module.exports.CourObj = CourObj;
+
+
+#+END_SRC
