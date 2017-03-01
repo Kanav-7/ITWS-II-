@@ -300,7 +300,7 @@
 
 #+END_SRC
 
-#+BEGIN_SRC html :tangle main.js
+#+BEGIN_SRC js :tangle main.js
 
 var allStudents = [];
 var allCourses = [];
