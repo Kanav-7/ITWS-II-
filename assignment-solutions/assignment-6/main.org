@@ -760,6 +760,7 @@ module.exports.viewAllCourses = viewAllCourses;
 module.exports.viewAllStudents = viewAllStudents;
 module.exports.StuObj = StuObj;
 module.exports.CourObj = CourObj;
-
+module.exports.allStudents = allStudents;
+module.exports.allCourses = allCourses;
 
 #+END_SRC
