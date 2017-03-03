@@ -1,0 +1,167 @@
+#+TITLE: ITWS Lab Task
+#+AUTHOR: Kanav Gupta
+#+EMAIL: kanav.gupta@students.iiit.ac.in
+
+#+BEGIN_SRC python :tangle leap_year.py
+def is_leapyear(year):
+	year = int(year)
+	if(year % 400 == 0):
+		return True
+	if(year % 100 == 0):
+		return False
+	if(year % 4 == 0):
+		return True
+	return False
+#+END_SRC
+
+#+BEGIN_SRC python :tangle frequency.py
+fout = open("output_2.txt","w")
+def get_word_frequency(line):
+    line = line.split(' ')
+    ans = {}
+    for i in line:
+        ans[i] = 0
+    for i in line:
+        ans[i] = ans[i]+1
+    temp = ans.keys()
+    temp = sorted(temp)
+    for x in temp:
+    	fout.write("%s:%d\n" %(x,ans[x]))
+get_word_frequency(input())        
+#+END_SRC
+
+#+BEGIN_SRC python :tangle gibberish.py
+fin = open("encrypted.txt","r")
+def decrypt(fin):
+	str = fin.read()
+	str = str.strip(' ')
+	str = str = str.strip('#')
+	str = str.split(' ')
+	s = ""
+	str = s.join(str)
+	str = str.split('#')
+	str = s.join(str)
+	str = str.split('\n')
+	str = s.join(str)
+	ans = ""
+	for i in str:
+		ans += chr(ord(i)-20)
+	fout = open("decrypted.txt","w")
+	fout.write(ans)
+decrypt(fin)	
+
+#+END_SRC
+
+#+BEGIN_SRC python :tangle flatten.py
+#!/usr/bin/python3
+from operator import add
+from functools import reduce
+
+def flatten(matrix):
+        vector = reduce(add, matrix)
+        return vector
+#+END_SRC
+
+#+BEGIN_SRC python :tangle dir_search.py
+from itws import edit_distance
+from functools import partial
+
+def closest(query):
+	inp = open("users.txt","r")
+	ls = inp.read().split('\n')
+
+	count = partial(edit_distance,query)
+
+	scores = list(map(count,ls))
+
+	pair = list(zip(ls,scores))
+
+	func = lambda a: a[1] < 4
+	filtered = filter(func,pair)
+
+	func = lambda a: a[0]
+	ans = list(map(func,filtered))
+
+	return ans
+
+#+END_SRC
+
+#+BEGIN_SRC python :tangle love_food.py
+fout = open("output_bonus.txt","w")
+def the_food_manager():
+	q = input()
+	q = int(q)
+	stack = []
+	while(q!=0):
+		inp = input()
+		if inp[0] == '1':
+			if len(stack) == 0:
+				fout.write("No Food\n")
+			else:	
+				fout.write(stack.pop())
+				fout.write("\n")
+		elif inp[0] == '2':
+			stack.append(inp[2:])
+		q = q -1		
+
+the_food_manager()		
+#+END_SRC
+
+#+BEGIN_SRC python :tangle complex_num.py
+ #!/usr/bin/python3
+ 
+import math
+
+class Complex(object):
+	def __init__(self, real, imaginary):
+		self.real = real
+		self.imaginary = imaginary
+
+	def __add__(self, no):
+		x = self.real + no.real
+		y = self.imaginary + no.imaginary
+		return Complex(x,y)
+
+	def __sub__(self, no):
+		x = self.real - no.real
+		y = self.imaginary - no.imaginary
+		return Complex(x,y)
+
+	def __mul__(self, no):
+		x = self.real*no.real - self.imaginary*no.imaginary
+		y = self.real*no.imaginary + self.imaginary*no.real
+		return Complex(x,y)
+
+	def __truediv__(self, no):
+		x = self.real*no.real + self.imaginary*no.imaginary
+		y = self.imaginary*no.real - self.real*no.imaginary
+		z = no.real*no.real + no.imaginary*no.imaginary
+		return Complex(x/z , y/z)
+
+	def mod(self):
+		k = math.sqrt(self.real*self.real + self.imaginary*self.imaginary)
+		return Complex(k,0)
+
+	def __str__(self):
+		if self.imaginary == 0:
+			result = "%.2f+0.00i" % (self.real)
+		elif self.real == 0:
+			if self.imaginary >= 0:
+				result = "0.00+%.2fi" % (self.imaginary)
+			else:
+				result = "0.00-%.2fi" % (abs(self.imaginary))
+		elif self.imaginary > 0:
+			result = "%.2f+%.2fi" % (self.real, self.imaginary)
+		else:
+			result = "%.2f-%.2fi" % (self.real, abs(self.imaginary))
+		return result
+		
+if __name__ == '__main__':
+	c = map(float, input().split())
+	d = map(float, input().split())
+	x = Complex(*c)
+	y = Complex(*d)
+	print(*map(str, [x+y, x-y, x*y, x/y, x.mod(), y.mod()]), sep='\n')								
+
+#+END_SRC
+
