@@ -1,0 +1,623 @@
+#+TITLE: Javascript API (Mini Project Part - II)
+#+AUTHOR: Kanav Gupta
+#+EMAIL: kanav.gupta@students.iiit.ac.in
+
+#+BEGIN_SRC js :tangle main.js
+		var allStudents,allCourses,studentsEnrolled,coursesTaken;
+
+		window.onload = function(){
+			viewAllStudents();
+			viewAllCourses();
+		}
+
+		var addNewStudent = function(roll, name, year)
+		{
+			 var valid_name = /^[A-Za-z]+$/;
+			  if(!name.match(valid_name))
+			  {
+			    alert("Input Error");
+			    return ;
+			  }     
+			  var valid_year = /^[U][G][1-6]$/;
+			  if(!year.match(valid_year))
+			  {
+			    alert("Input Error");
+			    return ;
+			  }
+			  if(roll > 20169999 || roll < 20110000 || isNaN(roll))
+			  {
+			    alert("Input Error");
+			    return ;
+			  }
+
+			$.ajax({
+				method: "POST",
+				url: "http://0.0.0.0:5000/addStudent",
+				data: {roll:roll,name:name,year:year},
+				success: function(success){
+						   viewAllStudents();	
+						  document.getElementById("addNewStudent").name.value = "";
+						  document.getElementById("addNewStudent").roll.value = "";
+						  document.getElementById("addNewStudent").year.value = "";
+						alert(success);},
+				error: function(xhr,status,eThrown){alert(status);}
+			});
+		}
+
+
+
+		var addNewCourse = function(id,name)
+		{
+
+			var valid_id = /^[A-Z][A-Z][A-Z][0-9][0-9][0-9]$/;
+			  if(!id.match(valid_id))
+			  {
+			        alert("Input Error");
+			        return ;
+			  }
+			  var valid_name = /^[A-Za-z]+$/;;
+			  if(!name.match(valid_name))
+			  {
+			        alert("Input Error");
+			        return ;
+			  }
+			$.ajax({
+				method: "POST",
+				url: "http://0.0.0.0:5000/addCourse",
+				data: {id:id,name:name},
+				success: function(success){
+					viewAllCourses();
+					alert(success);
+					document.getElementById("addNewCourse").name.value = "";
+	  				document.getElementById("addNewCourse").id.value = "";
+			},
+				error: function(xhr,status,eThrown){alert(status);}
+			});
+		}
+
+		var viewAllStudents = function()
+		{
+			$.ajax({
+				method: "GET",
+				url: "http://0.0.0.0:5000/students",
+				data: {},	
+				success: function(success)
+				{ 
+					allStudents = success.students;
+					var table = document.getElementById("allStudents");
+		  var deleterow = table.rows.length;    
+		  while(--deleterow) {
+		        table.deleteRow(deleterow);
+		  }
+
+		  $("#StudentList").empty();
+		  $("#StudentList1").empty();
+		  $("#StudentList2").empty();
+		  $("#StudentList3").empty();
+		
+		  for(i in allStudents)
+		  {
+		  	 			  var student_table = document.getElementById("allStudents");
+		  				  var new_row = student_table.insertRow(-1);
+						  var new_roll = new_row.insertCell(0);
+						  var new_name = new_row.insertCell(1);
+						  var new_year = new_row.insertCell(2); 
+
+						  new_roll.innerHTML = allStudents[i].roll;
+						  new_name.innerHTML = allStudents[i].name;
+						  new_year.innerHTML = allStudents[i].year;
+		
+						  var select = document.getElementById("StudentList");  
+						  var el = document.createElement("option");
+						  el.value = allStudents[i].roll;
+						  el.text = allStudents[i].name;
+						  select.appendChild(el);
+
+						  var select = document.getElementById("StudentList1");
+						  var el = document.createElement("option");
+						  el.value = allStudents[i].roll;
+						  el.text = allStudents[i].name;
+						  select.appendChild(el);
+
+						  var select = document.getElementById("StudentList2");
+						  var el = document.createElement("option");
+						  el.value = allStudents[i].roll;
+						  el.text = allStudents[i].name;
+						  select.appendChild(el);
+
+						  var select = document.getElementById("StudentList3");
+						  var el = document.createElement("option");
+						  el.value = allStudents[i].roll;
+						  el.text = allStudents[i].name;
+						  select.appendChild(el);
+		  }
+
+		},
+				error: function(xhr,status,eThrown){alert(status);}
+			});
+		}
+
+		var viewAllCourses = function()
+		{
+			$.ajax({
+				method: "GET",
+				url: "http://0.0.0.0:5000/courses",
+				data: {},	
+				success: function(success)
+				{
+					allCourses = success.courses;
+					  var table = document.getElementById("allCourses");
+					  var deleterow = table.rows.length;    
+					  while(--deleterow) {
+					        table.deleteRow(deleterow);
+					  }
+					  $("#CourseList").empty();
+					  $("#CourseList1").empty();
+					  $("#CourseList2").empty();
+					  $("#CourseList3").empty();
+		
+					  var i;
+					  for(i in allCourses)
+					  {
+					  	  var courses_table = document.getElementById("allCourses");
+						  var new_row = courses_table.insertRow(-1);
+						  var  new_id = new_row.insertCell(0);
+						  var new_name = new_row.insertCell(1);
+
+						  new_id.innerHTML =allCourses[i].id;
+						  new_name.innerHTML =allCourses[i].name;
+						  
+						  var select = document.getElementById("CourseList");
+						  var el = document.createElement("option");
+						  el.value =allCourses[i].id;
+						  el.text = allCourses[i].name;
+						  select.appendChild(el);
+
+						  var select = document.getElementById("CourseList1");
+						  var el = document.createElement("option");
+						  el.value = allCourses[i].id;
+						  el.text = allCourses[i].name;
+						  select.appendChild(el);
+
+						  var select = document.getElementById("CourseList2");
+						  var el = document.createElement("option");
+						  el.value =allCourses[i].id;
+						  el.text = allCourses[i].name;
+						  select.appendChild(el);
+						  
+
+						  var select = document.getElementById("CourseList3");
+						  var el = document.createElement("option");
+						  el.value = allCourses[i].id;
+						  el.text = allCourses[i].name;
+						  select.appendChild(el);
+
+					  }
+
+				},
+				//error: function(xhr,status,eThrown){alert(status);}
+			});
+		}
+
+		var addStudentToCourse = function(roll, id)
+		{
+			$.ajax({
+				method: "POST",
+				url: "http://0.0.0.0:5000/enroll",
+				data: {roll:roll , id:id},	
+				success: function(success){alert(success);},
+				error: function(xhr,status,eThrown){alert(status);}
+			});
+		}
+
+		var dropStudentFromCourse = function(roll, id)
+		{
+			$.ajax({
+				method: "POST",
+				url: "http://0.0.0.0:5000/drop",
+				data: {roll:roll , id:id},	
+				success: function(success){alert(success);},
+				error: function(xhr,status,eThrown){alert(status);}
+			});
+		}
+
+		var removeStudent = function(roll)
+		{
+			$.ajax({
+				method: "POST",
+				url: "http://0.0.0.0:5000/deleteStudent",
+				data: {roll:roll},	
+				success: function(success)
+				{
+					viewAllStudents();
+					alert(success);
+				},
+				error: function(xhr,status,eThrown){alert(status);}
+			});
+		}
+
+		var removeCourse = function(id)
+		{
+			$.ajax({
+				method: "POST",
+				url: "http://0.0.0.0:5000/deleteCourse",
+				data: {id:id},	
+				success: function(success){
+					viewAllCourses();
+					alert(success);
+				},
+				error: function(xhr,status,eThrown){alert(status);}
+			});
+		}
+
+		var viewEnrolled = function(id)
+		{
+			$.ajax({
+				method: "GET",
+				url: "http://0.0.0.0:5000/studentsEnrolled",
+				data: {id:id},	
+				success: function(success)
+				{
+					  studentsEnrolled = success.students;
+					  var table = document.getElementById("PrintStudentsTable");
+					  var deleterow = table.rows.length;    
+					  while(--deleterow) {
+					        table.deleteRow(deleterow);
+					  }
+
+					 //console.log(students);
+					  for(j in studentsEnrolled) 
+					  {
+				      var row = table.insertRow(-1);
+				      var roll = row.insertCell(0);
+				      var name = row.insertCell(1);
+				      var year = row.insertCell(2);
+				      roll.innerHTML = studentsEnrolled[j].roll;
+				      name.innerHTML = studentsEnrolled[j].name;
+				      year.innerHTML = studentsEnrolled[j].year;
+				    }
+				},
+				error: function(xhr,status,eThrown){alert(status);}
+			});
+		}
+
+		var viewCoursesTaken = function(roll)
+		{
+			$.ajax({
+				method: "GET",
+				url: "http://0.0.0.0:5000/coursesTaken",
+				data: {roll:roll},	
+				success: function(success)
+				{
+					coursesTaken = success.courses;
+					var table = document.getElementById('PrintCoursesTable');
+					var deleterow = table.rows.length;      
+					while(--deleterow) {
+					    table.deleteRow(deleterow);
+					  }
+					  var j;
+					  for(j in coursesTaken) {
+					  var row = table.insertRow(-1);
+					  var id = row.insertCell(0);
+					  var name = row.insertCell(1);
+					  id.innerHTML = coursesTaken[j].id;
+					  name.innerHTML = coursesTaken[j].name;
+	    			}
+				},
+				error: function(xhr,status,eThrown){alert(status);}
+			});
+		}
+module.exports ={
+    addNewStudent: addNewStudent,
+    addNewCourse: addNewCourse,
+    viewAllCourses: viewAllCourses,
+    viewAllStudents: viewAllStudents,
+    addStudentToCourse: addStudentToCourse,
+    dropStudentFromCourse: dropStudentFromCourse,
+    removeCourse: removeCourse,
+    removeStudent: removeStudent,
+    viewEnrolled: viewEnrolled,
+    viewCoursesTaken: viewCoursesTaken,
+};
+
+
+#+END_SRC
+
+#+BEGIN_SRC html :tangle index.html
+
+<!DOCTYPE html>
+<html>
+<head>
+                <title>ITWS Assignment 7 | [[20161151]]</title>
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+<meta content="utf-8" http-equiv="encoding">
+    <script src="./main.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+<link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet'  type='text/css'>
+    
+</head>
+
+<body style="background-color:#efffff">
+                 <div class="container"> 
+      <h1 align="center" class="headlight" >Javascript API</h1>
+      <hr>
+      <div> <h3 align="center" > Add New Student</h3>
+      <br>
+      <form id="addNewStudent" style="text-align:center">
+      <label for="in"><h4><b>Enter Roll No.:</b></h4></label>
+      <br>
+      <input class="form-control" name="roll" type="text" id="in">
+      <br>
+      <br>
+      <label for="nm"><h4><b>Enter Name:</b></h4></label> 
+      <input class="form-control" name="name" type="text" id="nm">
+      <br>
+      <br>
+      <label for="yr"><h4><b>Enter Year:</b></h4> </label>
+      <input class="form-control" name="year" type="text" id="yr">
+      <br>
+      <br>
+      <button type="button" onclick="addNewStudent(document.getElementById('addNewStudent').roll.value,document.getElementById('addNewStudent').name.value,document.getElementById('addNewStudent').year.value)" class="btn btn-success">ADD STUDENT</button>
+      </form>
+      </div>
+      <br/>
+      <br/>
+      <br/>
+      <br/>
+      <hr>
+
+      <div>
+      <h3 align="center">Enrolled Students</h3>
+      <table id="allStudents" class="table table-striped" align="center" width="100%">
+       <thead>
+        <tr>
+                <td width="33%"><h3>Roll</h3></td>
+                <td width="33%"><h3>Name</h3></td>
+                <td width="33%"><h3>Year</h3></td>
+        </tr>
+        </thead>
+        <tbody>
+        </tbody>
+        </table>
+  </div>
+
+
+
+<br/>
+<br/>
+<br/>
+<br/>
+<hr>
+
+<div>
+<h3 align="center">Add New Course </h3>
+<br>
+<br>
+<form id="addNewCourse" style="text-align:center">
+      <label for="id"><h4><b>Enter Course ID:</b></h4></label> 
+      <input class="form-control" name="id" type="text" id="id">
+      <br>
+      <br>
+      <label for="name"><h4><b>Enter Course Name:</b></h4>  </label> 
+      <input class="form-control" name="name" type="text" id="name">
+      <br>
+      <br>
+          <button type="button" onclick="addNewCourse(document.getElementById('addNewCourse').id.value,document.getElementById('addNewCourse').name.value)" class="btn btn-success">ADD COURSE</button>
+      <br>
+</form>
+</div>
+
+<br/>
+<br/>
+<br/>
+<br/>
+<hr>
+
+<div>
+<h3 align="center">All Courses</h3>
+<table id="allCourses" align="center" class="table table-striped" width="100%">
+       <thead>
+        <tr>
+                <td width="50%"><h3>Id</h3></td>
+                <td width = "50%"><h3>Name</h3></td>
+        </tr>
+       </thead>
+       <tbody>
+       
+       </tbody>
+</table>
+</div>
+
+<br/>
+<br/>
+<br/>
+<br/>
+<hr>
+<div>
+<h3 align="center"> Add Student to Course</h3>
+<br>
+<form style="text-align:center">
+      <div class="col-md-6 col-xs-6 col-lg-6">
+        <label for="StudentList"><h4><b> Select Student:</b></h4></label> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <select  class="btn btn-default dropdown-toggle" id="StudentList" data-style="btn-primary">
+         
+      </select> 
+      </div> 
+      <div class="col-md-6 col-xs-6 col-lg-6">
+        <label for="CourseList"><h4><b>Select Course:</b></h4></label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        
+      <select class="btn btn-default dropdown-toggle" id="CourseList"  data-style="btn-primary">
+          
+      </select>  
+      </div>
+      <br>
+      <br>
+      <br>
+      <br>  
+          <button type="button" onclick="addStudentToCourse(document.getElementById('StudentList').value,document.getElementById('CourseList').value)" class="btn btn-success">ADD</button>
+          </form>
+<br/>
+<br/>
+<br/>
+<br/>
+<hr>
+
+<div>
+<h3 align="center"> Drop Student from Course</h3>
+<br>
+<form style="text-align:center">
+      <div class="col-md-6 col-xs-6 col-lg-6">
+        <label for="StudentList"><h4><b> Select Student:</b></h4></label> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <select  class="btn btn-default dropdown-toggle" id="StudentList3" data-style="btn-primary">
+         
+      </select> 
+      </div> 
+      <div class="col-md-6 col-xs-6 col-lg-6">
+        <label for="CourseList"><h4><b>Select Course:</b></h4></label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        
+      <select class="btn btn-default dropdown-toggle" id="CourseList3"  data-style="btn-primary">
+          
+      </select>  
+      </div>
+      <br>
+      <br>
+      <br>
+      <br>  
+          <button type="button" onclick="dropStudentFromCourse(document.getElementById('StudentList3').value,document.getElementById('CourseList3').value)" class="btn btn-success text-center" >DROP</button>
+          </div>
+          </form>
+          </div>
+
+<br/>
+<br/>
+<br/>
+<br/>
+<hr>
+
+
+<div>
+<h3 align="center">Remove Student</h3>
+<br>
+<br>
+  <form>
+  <div class="col-md-6 col-xs-6 col-lg-6">
+    <label for="StudentList1"><h4><b>Select Student:</b></h4></label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <select  id="StudentList1" class="btn btn-default dropdown-toggle" data-style="btn-primary">
+
+      </select>
+      </div>
+    <div class="col-md-6 col-xs-6 col-lg-6">  
+      <button type="button" onclick="removeStudent(document.getElementById('StudentList1').value)" class="btn btn-success">REMOVE STUDENT</button>
+      </div>
+  </form>
+</div>
+
+<br/>
+<br/>
+<br/>
+<br/>
+<hr>
+<div>
+<h3 align="center">Remove Course</h3>
+<br>
+<br>
+  <form>
+  <div class="col-md-6 col-xs-6 col-lg-6">  
+  <label for="CourseList1"><h4><b>Select Course:</b></h4></label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <select  id="CourseList1" class="btn btn-default dropdown-toggle" data-style="btn-primary">
+          
+      </select> 
+    </div>
+    <div class="col-md-6 col-xs-6 col-lg-6">     
+     <button type="button" onclick="removeCourse(document.getElementById('CourseList1').value)" class="btn btn-success"> REMOVE COURSE </button>
+     </div>
+  </form>
+</div>
+ 
+<br/>
+<br/>
+<br/>
+<br/>
+<hr> 
+
+<div>
+<h3 align="center">Courses Student is Enrolled</h3>
+<br>
+<br>
+  <form>
+  <div class="col-md-6 col-xs-6 col-lg-6">  
+  <label for="StudentList2"><h4><b>Select Student:</b></h4></label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <select id="StudentList2" class="btn btn-default dropdown-toggle" data-style="btn-primary">
+          
+      </select>  
+      </div>
+      <div class="col-md-6 col-xs-6 col-lg-6">  
+    <button type="button" onclick="viewCoursesTaken(document.getElementById('StudentList2').value)" class="btn btn-success">DISPLAY COURSES</button>
+    </div>
+  </form>
+  <br>
+  <br>
+  <br>
+  <table id="PrintCoursesTable" align="center" class="table table-striped"  width="100%">
+       <thead>
+        <tr>
+                <td width="50%"><h3>Id</h3></td>
+                <td width = "50%"><h3>Name</h3></td>
+        </tr>
+       </thead>
+       <tbody>
+       
+       </tbody>
+</table>
+</div>
+<br/>
+<br/>
+<br/>
+<br/>
+<hr>
+<div>
+<h3 align="center">Students Enrolled in a Course</h3>
+<br>
+<br>
+  <form>
+  <div class="col-md-6 col-xs-6 col-lg-6"> 
+  <label for="CourseList2"><h4><b>Select Course:</b></h4></label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <select id="CourseList2" class="btn btn-default dropdown-toggle" data-style="btn-primary">
+          
+      </select>  
+     </div>
+     <div class="col-md-6 col-xs-6 col-lg-6"> 
+          <button type="button" onclick="viewEnrolled(document.getElementById('CourseList2').value)" class="btn btn-success">DISPLAY STUDENTS</button>
+          </div>
+  </form>
+  <br>
+  <br>
+  <br>
+  <table id="PrintStudentsTable" align="center" class="table table-striped"  width="100%">
+       <thead>
+        <tr>
+                <td width="33%"><h3>Roll</h3></td>
+                <td width="33%"><h3>Name</h3></td>
+                <td width="33%"><h3>Year</h3></td>
+        </tr>
+       </thead>
+       <tbody>
+       
+       </tbody>
+</table>
+</div>
+        
+          
+<br/>
+<br/>
+<br/>
+<br/>
+<hr>
+</div>
+</body> 
+</html>
+
+#+END_SRC
