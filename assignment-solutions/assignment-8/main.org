@@ -1,0 +1,184 @@
+#+TITLE: Intro Python Assignment
+#+AUTHOR: Kanav Gupta
+#+EMAIL: kanav.gupta@students.iiit.ac.in
+
+#+BEGIN_SRC python :tangle matrix.py
+#!/usr/bin/python3
+
+class Matrix:
+
+    def __init__(self, lofl, m, n):
+        assert len(lofl) == m
+        for row in lofl:
+            assert len(row) == n
+
+        self.lofl = lofl
+        self.m = m
+        self.n = n
+
+
+    def __add__(self, mat):
+        assert self.m == mat.m
+        assert self.n == mat.n
+        ans=[]
+        for i in range(0,self.m):
+            temp = []
+            [temp.append(self.lofl[i][j] + mat.lofl[i][j]) for j in range(0,self.n)]
+            ans.append(temp)    
+        return Matrix(ans,self.m,self.n)           
+
+        
+    def __sub__(self, mat):
+        assert self.m == mat.m
+        assert self.n == mat.n
+        ans = []
+        for i in range(0,self.m):
+            temp=[]
+            [temp.append(self.lofl[i][j] - mat.lofl[i][j]) for j in range(0,self.n)]
+            ans.append(temp)    
+        return Matrix(ans,self.m,self.n)
+
+
+    def __mul__(self, mat):
+        assert self.n == mat.m
+
+        ans = []
+        for i in range(0,self.m):
+            temp = []
+            for j in range(0,mat.n):
+                num = 0
+                for k in range(0,mat.m):
+                    num = num + self.lofl[i][k]*mat.lofl[k][j]
+                temp.append(num)
+            ans.append(temp)
+        return Matrix(ans,self.m,mat.n)
+
+    def __iter__(self):
+        ans = []
+        for i in self.lofl:
+            for j in i:
+                ans.append(j)
+        return iter(ans)          
+
+
+    def __str__(self):
+        stri = ''
+        for i, row in enumerate(self.lofl):
+            for j, elem in enumerate(row):
+                stri += str(elem) + ' '
+            stri += '\n'
+
+        return stri
+
+
+#+END_SRC
+
+#+BEGIN_SRC python :tangle valid_cards.py
+import re
+import csv
+
+
+def valid_phone(num,country):
+	if country == 'IND':
+		valid = re.compile(r'^[+][9][1][ -]?[7-9][0-9]{3}[ -]?[0-9]{6}$')
+	elif country == 'OMN':
+		valid = re.compile(r'^[+][9][6][8][ -]?[9][0-9]{3}[ -]?[0-9]{4}$')
+	elif country == 'ARE':
+		valid = re.compile(r'^[+][9][7][1][ -]?[0-9]{2}[ -]?[0-9]{7}$')
+	if valid.match(num):
+		return 1
+	return 0	
+
+def valid_card(num):
+	valid_visa = re.compile(r'^[4][0-9]{15}$')
+	valid_mc = re.compile(r'^[5][1-5][0-9]{14}$')
+	valid_mc1 = re.compile(r'^([2][2][2][1-9]|[2][3-6][0-9]{2}|[2][7][0-1][0-9]|[2][7][2][0])[0-9]{12}$')
+	valid_dc = re.compile(r'^[3][0][0-5][0-9]{11}$')
+	valid_dc1 = re.compile(r'^[3]([6]|[8])[0-9]{12}$')
+	if valid_visa.match(num):
+		return 'VISA'
+	elif (valid_mc.match(num) or valid_mc1.match(num)):
+		return 'MasterCard'
+	elif (valid_dc.match(num) or valid_dc1.match(num)):
+		return 'Diners Club'
+	return 0				
+
+
+def main():
+	ansstr = ""
+	with open('card_details.csv') as inputfile:
+		for line in inputfile:
+			ans  = []
+			line = line.strip('\n')
+			temp = line.split(',')
+			if(temp[3]!='IND' and temp[3]!= 'OMN' and temp[3]!= 'ARE'):
+				continue	
+			if(valid_phone(temp[1],temp[3]) == 1 and valid_card(temp[2])!=0):
+				ans.append(temp[0])
+				ans.append(temp[1])
+				ans.append(temp[2])
+				ans.append(temp[3])
+				ans.append(valid_card(temp[2]))
+				str = ','
+				final = str.join(ans)
+				final+= '\n'
+				ansstr+=final	
+			else:
+				continue
+	outfile = open("valid_cards.csv","w")
+	outfile.write(ansstr)				
+	return
+
+if __name__ == "__main__":
+	main()
+
+#+END_SRC
+
+#+BEGIN_SRC python :tangle get_comics.py
+import requests
+import sys
+from PIL import Image
+from io import BytesIO
+    
+def begin():
+    num = int(sys.argv[1])
+    first=requests.get('https://xkcd.com/info.0.json').json()['num']
+    for i in range(first-num+1,first+1):
+        obj = requests.get('https://xkcd.com/'+str(i)+'/info.0.json').json()
+        image_url = obj['img']
+        name = obj['safe_title'] 
+        img_data = requests.get(image_url).content
+        ans = Image.open(BytesIO(img_data))
+        ans.save(sys.argv[2] + "/" + name + ".png")
+
+if __name__=="__main__":
+    begin() 
+
+
+#+END_SRC
+
+#+BEGIN_SRC python :tangle backup.py
+import subprocess
+import json
+import sys
+from datetime import datetime
+
+def main():
+    inp = open("list.json","r")
+    temp = inp.read()
+    val = json.loads(temp)
+    print(sys.argv[1])
+    if(sys.argv[1] == 'backup'):
+        for i in range(len(val)):
+            subprocess.call('cp '+'-r ' + val[i][0] + ' ' + val[i][1], shell = True)
+    if(sys.argv[1] == 'restore'):
+        for i in range(len(val)):
+            subprocess.call('cp -r ' + val[i][1] + ' ' + val[i][0], shell = True) 
+    if(sys.argv[1] == 'push'):
+        subprocess.call('git add .', shell = True)
+        subprocess.call('git commit -m "'+ str(datetime.now()) +'"', shell = True)
+        subprocess.call('git push origin', shell = True)
+            
+main() 
+
+#+END_SRC
