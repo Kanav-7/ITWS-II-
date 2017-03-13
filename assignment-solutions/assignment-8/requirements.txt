@@ -1,12 +1,4 @@
-requests
-sys
-PIL
-io
-subprocess
-json
-datetime
-re
-csvadns-python==1.2.1
+adns-python==1.2.1
 AdvancedHTTPServer==2.0.5
 alembic==0.8.7.dev0
 anyjson==0.3.3
